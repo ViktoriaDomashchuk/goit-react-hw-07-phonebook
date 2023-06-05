@@ -2,12 +2,18 @@ import { Label, Input } from './Filter.styled';
 import { nanoid } from 'nanoid';
 import { setFilter } from '../../redux/filterSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import { getValueFilter } from '../../redux/selectors';
+import { selectValueFilter } from '../../redux/selectors';
+import PropTypes from 'prop-types';
 
 export const Filter = () => {
   const dispatch = useDispatch();
-  const value = useSelector(getValueFilter);
+  const value = useSelector(selectValueFilter);
   const idInput = nanoid();
+
+  const changeFilter = e => {
+    const value = e.currentTarget.value.toLowerCase();
+    dispatch(setFilter(value));
+  };
 
   return (
     <>
@@ -15,11 +21,13 @@ export const Filter = () => {
       <Input
         type="text"
         value={value}
-        onChange={e => {
-          dispatch(setFilter(e.target.value));
-        }}
+        onChange={changeFilter}
         id={idInput}
       ></Input>
     </>
   );
 };
+
+Filter.propTypes = {
+  value: PropTypes.string
+}.isRequired
